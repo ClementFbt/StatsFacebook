@@ -11,6 +11,7 @@ namespace JsonConverge
         static void Main(string[] args)
         {
             BrowserFiles browserFiles = new BrowserFiles();
+            browserFiles.displayResults("C:/Users/Fouby/Desktop/Axelunhommeuneviesonpognon_jxKcJTkb7w/");
         }
     }
 }
