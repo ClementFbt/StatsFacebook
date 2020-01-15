@@ -22,9 +22,9 @@ namespace JsonConverge
         public List<TabResults> createObject(string path)
         {
             int newMsg;
-            for (int i = 1; i <=8; i++)
+            int nbJsonFiles = Directory.GetFiles(@"" + path, "*.json").Length;
+            for (int i = 1; i <= nbJsonFiles; i++)
             {
-                
                 file = JObject.Parse(File.ReadAllText(@"" + path + "message_" + i + ".json")).ToObject<JsonFile>();
 
                 foreach (var participant in file.participants)
