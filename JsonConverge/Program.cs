@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JsonConverge
 {
@@ -10,8 +6,9 @@ namespace JsonConverge
     {
         static void Main(string[] args)
         {
+            ConvergeFiles convergeFiles = new ConvergeFiles();
             BrowserFiles browserFiles = new BrowserFiles();
-            browserFiles.displayResults("C:/Users/Fouby/Desktop/Axelunhommeuneviesonpognon_jxKcJTkb7w/");
+
             Console.Read();
         }
     }
