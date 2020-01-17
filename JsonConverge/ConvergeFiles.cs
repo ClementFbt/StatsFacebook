@@ -11,8 +11,8 @@ namespace JsonConverge
 {
     class ConvergeFiles
     {
-        JsonFile file;
-        List<TabResults> tabResults;
+        private JsonFile file;
+        private List<TabResults> tabResults;
 
         public ConvergeFiles()
         {
@@ -20,14 +20,12 @@ namespace JsonConverge
             tabResults = new List<TabResults>();
         }
 
-        public List<TabResults> createObject(string path)
+        public List<TabResults> createObject(List<string> pathList)
         {
             int newMsg;
-            int nbJsonFiles = Directory.GetFiles(@"" + path, "*.json").Length;
-            for (int i = 1; i <= nbJsonFiles; i++)
+            foreach (var path in pathList)
             {
-                file = JObject.Parse(File.ReadAllText(@"" + path + "message_" + i + ".json")).ToObject<JsonFile>();
-
+                file = JsonConvert.DeserializeObject<JsonFile>(File.ReadAllText(@path));
                 foreach (var participant in file.participants)
                 {
                     if (tabResults.Exists(t => t.nom == participant.name) is false) tabResults.Add(new TabResults { nom = participant.name, nbMessages = 0 });
@@ -38,15 +36,19 @@ namespace JsonConverge
             return tabResults;
         }
 
-        public void displayResults(string path)
+        public void displayResults()
         {
-            List<TabResults> resultats = createObject(path);
             Console.WriteLine("Nombre total : ");
             foreach (var item in tabResults.OrderByDescending(x => x.nbMessages))
             {
                 item.nom = Encoding.UTF8.GetString(Encoding.Default.GetBytes(item.nom));
                 Console.WriteLine(item.nom + ":" + item.nbMessages);
             }
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+
+            string file2 = JsonConvert.SerializeObject(file, settings);
+
+
         }
     }
 

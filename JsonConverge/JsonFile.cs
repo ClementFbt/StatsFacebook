@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,12 +18,19 @@ namespace JsonConverge
     public class Message
     {
         public string sender_name { get; set; }
+
         public long timestamp_ms { get; set; }
+
         public string content { get; set; }
+
         public Sticker sticker { get; set; }
+
         public List<Photo> photos { get; set; }
+
         public List<Gif> gifs { get; set; }
+
         public List<Video> videos { get; set; }
+
         public List<Reaction> reactions { get; set; }
     }
 
