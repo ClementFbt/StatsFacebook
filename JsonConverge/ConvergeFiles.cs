@@ -38,12 +38,15 @@ namespace JsonConverge
 
         public void displayResults()
         {
-            Console.WriteLine("Nombre total : ");
+            Console.WriteLine("---------------------------------------");
+            Console.WriteLine("Nombre total de message par personne : ");
+            Console.WriteLine("---------------------------------------");
             foreach (var item in tabResults.OrderByDescending(x => x.nbMessages))
             {
                 item.nom = Encoding.UTF8.GetString(Encoding.Default.GetBytes(item.nom));
                 Console.WriteLine(item.nom + ":" + item.nbMessages);
             }
+            Console.WriteLine("---------------------------------------");
             var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
 
             string file2 = JsonConvert.SerializeObject(file, settings);
