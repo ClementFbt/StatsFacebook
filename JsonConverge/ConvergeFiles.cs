@@ -52,7 +52,7 @@ namespace JsonConverge
                 Console.WriteLine(item.nom + " : " + item.nbMessages);
             }
             Console.WriteLine("---------------------------------------");
-            int choix = 0;
+            int choix = 1;
             if (choix.Equals(1))
             {
                 exportJson();
@@ -62,7 +62,8 @@ namespace JsonConverge
         public void exportJson()
         {
             var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-            string file2 = JsonConvert.SerializeObject(file, settings);
+            string fileToExport = JsonConvert.SerializeObject(file, settings);
+            File.WriteAllText(@"%userprofile%\documents\path.txt", fileToExport);
         }
     }
 
