@@ -44,7 +44,7 @@ namespace JsonConverge
             foreach (var item in tabResults.OrderByDescending(x => x.nbMessages))
             {
                 item.nom = Encoding.UTF8.GetString(Encoding.Default.GetBytes(item.nom));
-                Console.WriteLine(item.nom + ":" + item.nbMessages);
+                Console.WriteLine(item.nom + " : " + item.nbMessages);
             }
             Console.WriteLine("---------------------------------------");
             var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
