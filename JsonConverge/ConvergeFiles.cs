@@ -11,12 +11,14 @@ namespace JsonConverge
 {
     class ConvergeFiles
     {
+        private JsonFile partialFile;
         private JsonFile file;
         private List<TabResults> tabResults;
 
         public ConvergeFiles()
         {
             file = new JsonFile();
+            partialFile = new JsonFile();
             tabResults = new List<TabResults>();
         }
 
@@ -25,13 +27,16 @@ namespace JsonConverge
             int newMsg;
             foreach (var path in pathList)
             {
-                file = JsonConvert.DeserializeObject<JsonFile>(File.ReadAllText(@path));
-                foreach (var participant in file.participants)
-                {
-                    if (tabResults.Exists(t => t.nom == participant.name) is false) tabResults.Add(new TabResults { nom = participant.name, nbMessages = 0 });
-                    newMsg = file.messages.Where(m => m.sender_name == participant.name).Count();
-                    tabResults.FirstOrDefault(t => t.nom == participant.name).nbMessages += newMsg;
-                }
+                partialFile = JsonConvert.DeserializeObject<JsonFile>(File.ReadAllText(@path));
+                if (file.participants is null) file = partialFile;
+                else file.messages.AddRange(partialFile.messages);
+            }
+
+            foreach (var participant in file.participants)
+            {
+                if (tabResults.Exists(t => t.nom == participant.name) is false) tabResults.Add(new TabResults { nom = participant.name, nbMessages = 0 });
+                newMsg = file.messages.Where(m => m.sender_name == participant.name).Count();
+                tabResults.FirstOrDefault(t => t.nom == participant.name).nbMessages += newMsg;
             }
             return tabResults;
         }
@@ -47,11 +52,17 @@ namespace JsonConverge
                 Console.WriteLine(item.nom + " : " + item.nbMessages);
             }
             Console.WriteLine("---------------------------------------");
+            int choix = 0;
+            if (choix.Equals(1))
+            {
+                exportJson();
+            }
+        }
+
+        public void exportJson()
+        {
             var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-
             string file2 = JsonConvert.SerializeObject(file, settings);
-
-
         }
     }
 
