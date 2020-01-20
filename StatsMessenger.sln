@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonConverge", "JsonConverge\JsonConverge.csproj", "{CFC9983E-DC28-4BE0-82BE-315AE598C8BA}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "MessengerAnalysis", "MessengerAnalysis\MessengerAnalysis.pyproj", "{C3697335-0C7A-4478-8679-8163317441B1}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "MessengerAnalysis", "MessengerAnalysis\MessengerAnalysis.pyproj", "{F5D97118-D3CB-44A4-9E24-DA0BA4B80EE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,8 +17,8 @@ Global
 		{CFC9983E-DC28-4BE0-82BE-315AE598C8BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFC9983E-DC28-4BE0-82BE-315AE598C8BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFC9983E-DC28-4BE0-82BE-315AE598C8BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C3697335-0C7A-4478-8679-8163317441B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C3697335-0C7A-4478-8679-8163317441B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5D97118-D3CB-44A4-9E24-DA0BA4B80EE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5D97118-D3CB-44A4-9E24-DA0BA4B80EE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

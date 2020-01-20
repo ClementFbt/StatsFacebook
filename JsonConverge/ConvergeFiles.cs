@@ -22,9 +22,8 @@ namespace JsonConverge
             tabResults = new List<TabResults>();
         }
 
-        public List<TabResults> createObject(List<string> pathList)
+        public JsonFile createObject(List<string> pathList)
         {
-            int newMsg;
             foreach (var path in pathList)
             {
                 partialFile = JsonConvert.DeserializeObject<JsonFile>(File.ReadAllText(@path));
@@ -32,6 +31,24 @@ namespace JsonConverge
                 else file.messages.AddRange(partialFile.messages);
             }
 
+            file.messages.RemoveAll(m => m.timestamp_ms < 1469764800000);
+
+            return file;
+        }
+
+        public void exportJson(string user)
+        {
+            string path = @"C:/Users/" + user + "/Documents/StatsMessengerJson/messages.json";
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            string json = JsonConvert.SerializeObject(file, Formatting.Indented, settings);
+            if (File.Exists(path)) File.Delete(path);
+            File.WriteAllText(path, json);
+            Console.WriteLine("All done !");
+        }
+
+        public List<TabResults> countResults(JsonFile file)
+        {
+            int newMsg;
             foreach (var participant in file.participants)
             {
                 if (tabResults.Exists(t => t.nom == participant.name) is false) tabResults.Add(new TabResults { nom = participant.name, nbMessages = 0 });
@@ -43,6 +60,7 @@ namespace JsonConverge
 
         public void displayResults()
         {
+            countResults(file);
             Console.WriteLine("---------------------------------------");
             Console.WriteLine("Nombre total de message par personne : ");
             Console.WriteLine("---------------------------------------");
@@ -51,19 +69,6 @@ namespace JsonConverge
                 item.nom = Encoding.UTF8.GetString(Encoding.Default.GetBytes(item.nom));
                 Console.WriteLine(item.nom + " : " + item.nbMessages);
             }
-            Console.WriteLine("---------------------------------------");
-            int choix = 1;
-            if (choix.Equals(1))
-            {
-                exportJson();
-            }
-        }
-
-        public void exportJson()
-        {
-            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-            string fileToExport = JsonConvert.SerializeObject(file, settings);
-            File.WriteAllText(@"%userprofile%\documents\path.txt", fileToExport);
         }
     }
 
