@@ -22,7 +22,6 @@ namespace JsonConverge
             string userName = Console.ReadLine();
             convergeFiles.createObject(browserFiles.browsing());
             convergeFiles.exportJson(userName);
-            convergeFiles.displayResults();
             Console.Read();
         }
     }
