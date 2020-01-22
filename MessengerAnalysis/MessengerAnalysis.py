@@ -27,10 +27,9 @@ json = openJson()
 def countMessagesPerUserDay(data):
     path = os.path.join(pathFolder,'messagesPerUserDay.png')
     messages = pd.DataFrame.from_dict(json['messages'])
-    del messages['timestamp_ms']
-    del messages['reactions']
+    newMessages = messages[['timestamp_datetime', 'sender_name']].copy()
     
-    messagesPerUserDay = messages.groupby([messages['timestamp_datetime'].dt.date, 'sender_name']).size().unstack()
+    messagesPerUserDay = newMessages.groupby([newMessages['timestamp_datetime'].dt.date, 'sender_name']).size().unstack()
     
 
     ax = messagesPerUserDay.plot(figsize=(35,6))
@@ -42,6 +41,25 @@ def countMessagesPerUserDay(data):
     
     fig = ax.get_figure()
     fig.savefig(path)
+    
+# count number of messages per user per day
+def countMessagesPerHour(data):
+    path = os.path.join(pathFolder,'messagesPerHour.png')
+    messages = pd.DataFrame.from_dict(json['messages'])
+    newMessages = messages[['timestamp_datetime', 'sender_name']].copy()
+
+    messagesPerHour = newMessages.groupby(messages['timestamp_datetime'].dt.hour).size()
+    #radar chart
+
+# cloud map of most used words (per user in one map)
+
+# cloud map of most used emoji
+
+# average messages per day
+
+# average words per messages per user
+
+# most used emoji
 
 # count number of messages by users
 def countByUser(data):
@@ -87,3 +105,4 @@ def percentageMessagesPerUser(msgByUser):
     
 percentageMessagesPerUser(countByUser(json))
 countMessagesPerUserDay(json)
+countMessagesPerHour(json)
