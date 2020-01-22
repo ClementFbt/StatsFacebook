@@ -31,7 +31,7 @@ namespace JsonConverge
                 else file.messages.AddRange(partialFile.messages);
             }
 
-            file.messages.RemoveAll(m => m.timestamp_ms < 1469764800000);
+            file.messages.RemoveAll(m => m.timestamp_ms < 1501300800000);
 
             return file;
         }
