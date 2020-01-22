@@ -11,6 +11,7 @@ namespace JsonConverge
 
     class BrowserFiles
     {   
+        //open folder dialog to select a messenger folder
         public List<string> browsing()
         {
             List<string> pathList = new List<string>();

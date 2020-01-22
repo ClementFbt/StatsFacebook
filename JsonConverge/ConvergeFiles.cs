@@ -22,6 +22,7 @@ namespace JsonConverge
             tabResults = new List<TabResults>();
         }
 
+        //retrieve all .json files and merge into one
         public JsonFile createObject(List<string> pathList)
         {
             foreach (var path in pathList)
@@ -36,6 +37,7 @@ namespace JsonConverge
             return file;
         }
 
+        //export the json file to be used by another program
         public void exportJson(string user)
         {
             string path = @"C:/Users/" + user + "/Documents/StatsMessengerJson/messages.json";
