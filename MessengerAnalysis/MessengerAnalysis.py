@@ -5,8 +5,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import datetime
-from pprint import pprint
+import re
 import matplotlib.dates as mdates
+from collections import Counter
 
 user = getpass.getuser()
 pathFolder = os.path.join('C:\\Users\\', user, 'Documents\\StatsMessengerJson\\')
@@ -44,16 +45,57 @@ def countMessagesPerUserDay(data):
     
 # count number of messages per user per day
 def countMessagesPerHour(data):
-    path = os.path.join(pathFolder,'messagesPerHour.png')
+    path = os.path.join(pathFolder,'messagesPerUserHour.png')
     messages = pd.DataFrame.from_dict(json['messages'])
-    newMessages = messages[['timestamp_datetime', 'sender_name']].copy()
+    newMessages = messages[['timestamp_datetime', 'sender_name']].copy()  
+    
+    messagesPerHour = newMessages.groupby([messages['timestamp_datetime'].dt.hour, messages['sender_name']]).size().unstack()
+    
+    ax = messagesPerHour.plot()
+    ax.xaxis.set_major_locator(mdates.HourLocator())
+    plt.xticks(rotation=45)
+    ax.set_ylabel('Nombre de messages par personne')
+    ax.set_xlabel('Heure')
+    ax.set_title('Nombre de messages par heure et par utilisateur')
+    
+    fig = ax.get_figure()
+    fig.savefig(path)
 
-    messagesPerHour = newMessages.groupby(messages['timestamp_datetime'].dt.hour).size()
-    #radar chart
-
+# cloud map of most used sentences (per user in one map)
+def countIteriationMessagesPerUser(data):
+    path = os.path.join(pathFolder,'messageCount.csv')
+    messages = pd.DataFrame.from_dict(json['messages'])
+    messages = messages[['sender_name', 'content']].copy().dropna()
+    messageCount = pd.DataFrame({'message_count' : messages.groupby(['sender_name', 'content']).size()}).reset_index()        
+    messageCount.to_csv(path, sep='|')
+    
 # cloud map of most used words (per user in one map)
+def countWordsPerUser(data):
+    path = os.path.join(pathFolder,'wordCount.csv')
+    messages = pd.DataFrame.from_dict(json['messages'])
+    messages = messages[['sender_name', 'content']].copy().dropna()
+    dictMessageCount = messages.to_dict('records')
+    
+    dictByUser = {}
+    dictCountWordsByUser = {}
+        
+    for message in dictMessageCount:
+        message['content'] = re.sub('[^A-Za-z\' ]+','', message['content']).split()
+        message['content'] = [x.lower() for x in message['content']]
+        if message['sender_name'] in dictByUser.keys():
+            dictByUser[message['sender_name']]['content'] += message['content']
+        else:
+            dictByUser[message['sender_name']] = {'content':message['content']}
+            dictCountWordsByUser[message['sender_name']] = {}
+    for user in dictByUser.keys():
+        dictCountWordsByUser[user] = Counter(dictByUser[user]['content'])
+    
+    df = pd.DataFrame.from_dict(dictCountWordsByUser)
+    df.to_csv(path, sep='|')
 
 # cloud map of most used emoji
+
+#radar chart
 
 # average messages per day
 
@@ -104,5 +146,7 @@ def percentageMessagesPerUser(msgByUser):
     plt.savefig(path)
     
 percentageMessagesPerUser(countByUser(json))
+countIteriationMessagesPerUser(json)
 countMessagesPerUserDay(json)
 countMessagesPerHour(json)
+countWordsPerUser(json)
