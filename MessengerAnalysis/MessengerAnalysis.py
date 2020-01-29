@@ -16,10 +16,9 @@ pathFolder = os.path.join('C:\\Users\\', user, 'Documents\\StatsMessengerJson\\'
 def openJson():
     path = os.path.join(pathFolder,'messages.json')
     with open(path, encoding="utf8") as f:
-        data = json.load(f)
+        data = json.load(f)    
     for message in data['messages']:
         message['timestamp_datetime'] = datetime.datetime.fromtimestamp(message['timestamp_ms']/1000.0)
-    # os.remove(path)
     return data
 
 json = openJson()
@@ -95,13 +94,13 @@ def countWordsPerUser(data):
 
 # cloud map of most used emoji
 
-#radar chart
+# radar chart
+
+# most used emoji
 
 # average messages per day
 
 # average words per messages per user
-
-# most used emoji
 
 # count number of messages by users
 def countByUser(data):
