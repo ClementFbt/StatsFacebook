@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Newtonsoft;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace JsonConverge
 {
@@ -22,55 +24,62 @@ namespace JsonConverge
             tabResults = new List<TabResults>();
         }
 
-        //retrieve all .json files and merge into one
+      private string DecodeString(string text)
+        {
+            Encoding targetEncoding = Encoding.GetEncoding("ISO-8859-1");
+            var unescapeText = Regex.Unescape(text);
+            return  Encoding.UTF8.GetString(targetEncoding.GetBytes(unescapeText));            
+        }
+
+        static string EncodeNonAsciiCharacters(string value)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in value)
+            {
+                if (c > 127)
+                {
+                    string encodedValue = "\\u" + ((int)c).ToString("x4");
+                    sb.Append(encodedValue);
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
+        }
+      
         public JsonFile createObject(List<string> pathList)
         {
             foreach (var path in pathList)
             {
-                partialFile = JsonConvert.DeserializeObject<JsonFile>(File.ReadAllText(@path));
-                if (file.participants is null) file = partialFile;
+                string p = File.ReadAllText(@path, Encoding.UTF8);
+                partialFile = JsonConvert.DeserializeObject<JsonFile>(p);
+                if (file.messages is null) file = partialFile;
                 else file.messages.AddRange(partialFile.messages);
             }
 
-            file.messages.RemoveAll(m => m.timestamp_ms < 1469764800000);
+
+
+            file.messages.RemoveAll(m => m.timestamp_ms < 1501300800000);
 
             return file;
         }
+        
 
         //export the json file to be used by another program
         public void exportJson(string user)
         {
             string path = @"C:/Users/" + user + "/Documents/StatsMessengerJson/messages.json";
             var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            //@"\u" + ((int)34).ToString("x4")
+            file.messages.Where(m => m.content != null).ToList().ForEach(m => m.content = m.content.Replace("\n"," ")
+                                                                                                    .Replace(@"\", @"\\")
+                                                                                                    .Replace(@"""", @"\"""));
             string json = JsonConvert.SerializeObject(file, Formatting.Indented, settings);
             if (File.Exists(path)) File.Delete(path);
-            File.WriteAllText(path, json);
+            File.WriteAllText(path, EncodeNonAsciiCharacters(DecodeString(json)));
             Console.WriteLine("All done !");
-        }
-
-        public List<TabResults> countResults(JsonFile file)
-        {
-            int newMsg;
-            foreach (var participant in file.participants)
-            {
-                if (tabResults.Exists(t => t.nom == participant.name) is false) tabResults.Add(new TabResults { nom = participant.name, nbMessages = 0 });
-                newMsg = file.messages.Where(m => m.sender_name == participant.name).Count();
-                tabResults.FirstOrDefault(t => t.nom == participant.name).nbMessages += newMsg;
-            }
-            return tabResults;
-        }
-
-        public void displayResults()
-        {
-            countResults(file);
-            Console.WriteLine("---------------------------------------");
-            Console.WriteLine("Nombre total de message par personne : ");
-            Console.WriteLine("---------------------------------------");
-            foreach (var item in tabResults.OrderByDescending(x => x.nbMessages))
-            {
-                item.nom = Encoding.UTF8.GetString(Encoding.Default.GetBytes(item.nom));
-                Console.WriteLine(item.nom + " : " + item.nbMessages);
-            }
         }
     }
 
