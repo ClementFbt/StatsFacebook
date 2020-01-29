@@ -24,7 +24,7 @@ namespace JsonConverge
             tabResults = new List<TabResults>();
         }
 
-        private string DecodeString(string text)
+      private string DecodeString(string text)
         {
             Encoding targetEncoding = Encoding.GetEncoding("ISO-8859-1");
             var unescapeText = Regex.Unescape(text);
@@ -48,7 +48,7 @@ namespace JsonConverge
             }
             return sb.ToString();
         }
-
+      
         public JsonFile createObject(List<string> pathList)
         {
             foreach (var path in pathList)
@@ -67,6 +67,7 @@ namespace JsonConverge
         }
         
 
+        //export the json file to be used by another program
         public void exportJson(string user)
         {
             string path = @"C:/Users/" + user + "/Documents/StatsMessengerJson/messages.json";
